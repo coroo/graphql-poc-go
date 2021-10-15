@@ -13,37 +13,173 @@ import (
 	"github.com/graphql-go/handler"
 )
 
-// Product contains descriptionrmation about one product
+
+type ProductRider struct {
+    Id					string	`json:"id"`
+    Slug				string	`json:"slug"`
+    Name				string	`json:"name"`
+    IsActive			bool	`json:"is_active"`
+    ParentId			string	`json:"parent_id"`
+    Summary				string	`json:"summary"`
+    Description			string	`json:"description"`
+    IconSvg				string	`json:"icon_svg"`
+    CoveragePeriod		string	`json:"coverage_period"`
+}
+
+type ProductBenefitGroup struct {
+    Id					string	`json:"id"`
+    TooltipText			string	`json:"tooltip_text"`
+    Name				string	`json:"name"`
+    Order				int	`json:"order"`
+	ProductBenefit		[]ProductBenefit `json:"benefits"`
+}
+
+type ProductBenefit struct {
+    Id					string	`json:"id"`
+    Name				string	`json:"name"`
+    IconSvg				string	`json:"icon_svg"`
+    IconEtc				string	`json:"icon_etc"`
+    ProductId			string	`json:"product_id"`
+    ProductBenefitGroupId	string	`json:"product_benefit_group_id"`
+    TooltipText			string	`json:"tooltip_text"`
+    TooltipTextDescription	string	`json:"tooltip_text_description"`
+    Order				int	`json:"order"`
+}
+
+type ProductCategory struct {
+    Id					string	`json:"id"`
+    Name				string	`json:"name"`
+}
+
+type ProductInsuranceType struct {
+    Id					string	`json:"id"`
+    Name				string	`json:"name"`
+}
 type Product struct {
-	Slug    string   `json:"slug"`
-	Name  string  `json:"name"`
-	Description  string  `json:"description,omitempty"`
-	Summary  string  `json:"summary"`
-	StartAgeFrom float64 `json:"price"`
+    Id						string	`json:"id"`
+    Slug					string	`json:"slug"`
+    Name					string	`json:"name"`
+    DocName					string	`json:"doc_name"`
+    ParentId				string	`json:"parent_id"`
+    IsActive		 		bool	`json:"is_active"`
+    Featured		 		bool	`json:"featured"`
+    BundlingWithRider		bool	`json:"bundling_with_rider"`
+    Subheading				string	`json:"subheading"`
+    Summary					string	`json:"summary"`
+    Description				string	`json:"description"`
+    IconSvg					string	`json:"icon_svg"`
+    IconEtc					string	`json:"icon_etc"`
+    RipLink					string	`json:"rip_link"`
+    ProductType				string	`json:"product_type"`
+    CoveragePeriod			string	`json:"coverage_period"`
+    AvailableClaimMethods	[]string	`json:"available_claim_methods"`
+    CovidCoverage		 	bool	`json:"covid_coverage"`
+    StartAgeFrom			int	`json:"start_age_from"`
+	StartPremiumFrom 		float64	`json:"start_premium_from"`
+    Category				ProductCategory	`json:"category"`
+    InsuranceType			ProductInsuranceType	`json:"insurance_type"`
+    Riders					[]ProductRider	`json:"riders"`
+    BenefitGroups			[]ProductBenefitGroup	`json:"benefit_groups"`
+    // Tnc						List	`json:"tnc"`
+    // Faq						List	`json:"faq"`
+    // NotCoverage				List	`json:"not_coverage"`
+    // Plans					List	`json:"plans"`
+	// BELUM SELESAI
 }
 
 var productType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Product",
 		Fields: graphql.Fields{
-			"slug": &graphql.Field{
-				Type: graphql.String,
-			},
-			"name": &graphql.Field{
-				Type: graphql.String,
-			},
-			"summary": &graphql.Field{
-				Type: graphql.String,
-			},
-			"description": &graphql.Field{
-				Type: graphql.String,
-			},
-			"price": &graphql.Field{
-				Type: graphql.Float,
-			},
+			"id": &graphql.Field{Type: graphql.String},
+			"slug": &graphql.Field{Type: graphql.String},
+			"name": &graphql.Field{Type: graphql.String},
+			"doc_name": &graphql.Field{Type: graphql.String},
+			"parent_id": &graphql.Field{Type: graphql.String},
+			"is_active": &graphql.Field{Type: graphql.Boolean},
+			"featured": &graphql.Field{Type: graphql.Boolean},
+			"bundling_with_rider": &graphql.Field{Type: graphql.Boolean},
+			"subheading": &graphql.Field{Type: graphql.String},
+			"summary": &graphql.Field{Type: graphql.String},
+			"description": &graphql.Field{Type: graphql.String},
+			"icon_svg": &graphql.Field{Type: graphql.String},
+			"icon_etc": &graphql.Field{Type: graphql.String},
+			"rip_link": &graphql.Field{Type: graphql.String},
+			"product_type": &graphql.Field{Type: graphql.String},
+			"coverage_period": &graphql.Field{Type: graphql.String},
+			"available_claim_methods": &graphql.Field{Type: graphql.String},
+			"covid_coverage": &graphql.Field{Type: graphql.Boolean},
+			"start_age_from": &graphql.Field{Type: graphql.Int},
+			"start_premium_from": &graphql.Field{Type: graphql.Float},
+			"category": &graphql.Field{Type: ProductCategoryType},
+			"insurance_type": &graphql.Field{Type: ProductInsuranceTypeType},
+			"riders": &graphql.Field{Type: graphql.NewList(ProductRiderType)},
+			"benefit_groups": &graphql.Field{Type: graphql.NewList(ProductBenefitGroupType)},
 		},
 	},
 )
+
+// ProductBenefitGroupType is the GraphQL schema for the Product type.
+var ProductBenefitGroupType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductBenefitGroup",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"tooltip_text": &graphql.Field{Type: graphql.String},
+		"name": &graphql.Field{Type: graphql.String},
+		"order": &graphql.Field{Type: graphql.Int},
+		"benefits": &graphql.Field{Type: graphql.NewList(ProductBenefitType)},
+	},
+})
+
+// ProductBenefitType is the GraphQL schema for the Product type.
+var ProductBenefitType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductBenefit",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"name": &graphql.Field{Type: graphql.String},
+		"icon_svg": &graphql.Field{Type: graphql.String},
+		"icon_etc": &graphql.Field{Type: graphql.String},
+		"product_id": &graphql.Field{Type: graphql.String},
+		"product_benefit_group_id": &graphql.Field{Type: graphql.String},
+		"tooltip_text": &graphql.Field{Type: graphql.String},
+		"tooltip_text_description": &graphql.Field{Type: graphql.String},
+		"order": &graphql.Field{Type: graphql.Int},
+	},
+})
+
+// ProductRiderType is the GraphQL schema for the Product type.
+var ProductRiderType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductRider",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"slug": &graphql.Field{Type: graphql.String},
+		"name": &graphql.Field{Type: graphql.String},
+		"is_active": &graphql.Field{Type: graphql.Boolean},
+		"parent_id": &graphql.Field{Type: graphql.String},
+		"summary": &graphql.Field{Type: graphql.String},
+		"description": &graphql.Field{Type: graphql.String},
+		"icon_svg": &graphql.Field{Type: graphql.String},
+		"coverage_period": &graphql.Field{Type: graphql.String},
+	},
+})
+
+// ProductCategoryType is the GraphQL schema for the Product type.
+var ProductCategoryType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductCategory",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"name": &graphql.Field{Type: graphql.String},
+	},
+})
+
+// ProductInsuranceTypeType is the GraphQL schema for the Product type.
+var ProductInsuranceTypeType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductInsuranceType",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"name": &graphql.Field{Type: graphql.String},
+	},
+})
 
 var products = getJson("https://staging-product.superyou.co.id/api/v1/products")
 var myClient = &http.Client{Timeout: 10 * time.Second}
@@ -139,7 +275,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 					Name:  params.Args["name"].(string),
 					Description:  params.Args["description"].(string),
 					Summary:  params.Args["summary"].(string),
-					StartAgeFrom: params.Args["price"].(float64),
+					StartPremiumFrom: params.Args["price"].(float64),
 				}
 				products = append(products, product)
 				return product, nil
@@ -185,7 +321,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 							products[i].Summary = summary
 						}
 						if priceOk {
-							products[i].StartAgeFrom = price
+							products[i].StartPremiumFrom = price
 						}
 						product = products[i]
 						break
