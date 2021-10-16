@@ -2,34 +2,40 @@ package utils
 
 import (
 	"net/http"
-	"io/ioutil"
 	"time"
-	"fmt"
+	"bytes"
 	"log"
+	// "io/ioutil"
 	"encoding/json"
 )
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
 
-func getJson(url string) []Product {
+func GetJson(url string, target interface{}) error {
     r, err := myClient.Get(url)
     if err != nil {
-        fmt.Println(err)
+        return err
     }
     defer r.Body.Close()
-	responseData, err := ioutil.ReadAll(r.Body)
+
+    return json.NewDecoder(r.Body).Decode(target)
+}
+
+func PostJson(url string, target interface{}, postBody []byte) error {
+	requestBody := bytes.NewBuffer(postBody)
+	resp, err := http.Post(url, "application/json", requestBody)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalf("An Error Occured %v", err)
 	}
-	//Convert the responseData to type string
+	defer resp.Body.Close()
 
-    var responseObject []Product
-    json.Unmarshal(responseData, &responseObject)
+	// ==== Activate it only for debug only ====
+	// body, err := ioutil.ReadAll(resp)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	// sb := string(body)
+	// log.Printf(sb)
 
-    // for i := 0; i < len(responseObject); i++ {
-    //     fmt.Println(responseObject[i])
-    // }
-	// sb := string(responseData)
-
-    return responseObject
+    return json.NewDecoder(resp.Body).Decode(target)
 }
