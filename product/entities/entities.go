@@ -41,6 +41,7 @@ type ProductInsuranceType struct {
     Id					string	`json:"id"`
     Name				string	`json:"name"`
 }
+
 type Product struct {
     Id						string	`json:"id"`
     Slug					string	`json:"slug"`

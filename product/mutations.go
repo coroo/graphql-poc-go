@@ -27,7 +27,7 @@ func CreateProductMutation() *graphql.Field {
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 			// rand.Seed(time.Now().UnixNano())
-			// product := entities.Product{
+			// product := Product{
 			// 	Slug:    params.Args["slug"].(string),
 			// 	Name:  params.Args["name"].(string),
 			// 	// Description:  params.Args["description"].(string),
@@ -133,13 +133,5 @@ func DeleteProductMutation() *graphql.Field {
 
 			return product, nil
 		},
-	}
-}
-
-func GetRootMutationFields() graphql.Fields {
-	return graphql.Fields{
-		"createProduct": CreateProductMutation(),
-		"updateProduct": UpdateProductMutation(),
-		"deleteProduct": DeleteProductMutation(),
 	}
 }

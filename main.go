@@ -5,18 +5,19 @@ import (
 	"log"
 	"github.com/graphql-go/handler"
 	"github.com/graphql-go/graphql"
-	"graphql-poc-go/product"
+	// "graphql-poc-go/product"
+	"graphql-poc-go/app/routes"
 )
 
 var schema, _ = graphql.NewSchema(
 	graphql.SchemaConfig{
 		Query: graphql.NewObject(graphql.ObjectConfig{
 			Name:   "RootQuery",
-			Fields: product.GetRootQueryFields(),
+			Fields: routes.GetRootQueryFields(),
 		}),
 		Mutation: graphql.NewObject(graphql.ObjectConfig{
 			Name:   "RootMutation",
-			Fields: product.GetRootMutationFields(),
+			Fields: routes.GetRootMutationFields(),
 		}),
 	},
 )
