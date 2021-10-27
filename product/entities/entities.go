@@ -1,5 +1,10 @@
 package entities
 
+type Delete struct {
+    Message				string	`json:"message"`
+    Description	        string	`json:"description"`
+}
+
 type ProductRider struct {
     Id					string	`json:"id"`
     Slug				string	`json:"slug"`

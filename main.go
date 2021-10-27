@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 	"log"
+
 	"github.com/graphql-go/handler"
 	"github.com/graphql-go/graphql"
-	// "graphql-poc-go/product"
 	"graphql-poc-go/app/routes"
 )
 
@@ -21,6 +21,7 @@ var schema, _ = graphql.NewSchema(
 		}),
 	},
 )
+
 
 func main() {
 	h := handler.New(&handler.Config{

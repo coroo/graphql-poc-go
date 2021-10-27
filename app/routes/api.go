@@ -26,9 +26,9 @@ func GetRootQueryFields() graphql.Fields {
 // GetRootMutationFields returns all the available mutations.
 func GetRootMutationFields() graphql.Fields {
 	return graphql.Fields{
-		"createProduct": product.CreateProductMutation(),
-		"updateProduct": product.UpdateProductMutation(),
-		"deleteProduct": product.DeleteProductMutation(),
+		"createProduct": product.NewProductMutation(productService).CreateProductMutation(),
+		"updateProduct": product.NewProductMutation(productService).UpdateProductMutation(),
+		"deleteProduct": product.NewProductMutation(productService).DeleteProductMutation(),
 
 		// "createInvoice": invoice.CreateInvoiceMutation(),
 		// "updateInvoice": invoice.UpdateInvoiceMutation(),

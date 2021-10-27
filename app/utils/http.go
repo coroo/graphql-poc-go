@@ -5,6 +5,7 @@ import (
 	"time"
 	"bytes"
 	"log"
+	// "io/ioutil"
 	
 	"encoding/json"
 )
@@ -41,8 +42,54 @@ func PostJson(url string, target interface{}, postBody []byte) error {
 	}
 	defer resp.Body.Close()
 
-	// ==== Activate it only for debug only ====
-	// body, err := ioutil.ReadAll(resp)
+	// ==== Activate it only for debug only; import "io/ioutil" ====
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	// sb := string(body)
+	// log.Printf(sb)
+
+    return json.NewDecoder(resp.Body).Decode(target)
+}
+
+func UpdateJson(url string, target interface{}, postBody []byte) error {
+	requestBody := bytes.NewBuffer(postBody)
+	req, err := http.NewRequest("UPDATE", url, requestBody)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+    resp, err := myClient.Do(req)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+	defer resp.Body.Close()
+
+	// ==== Activate it only for debug only; import "io/ioutil" ====
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	// sb := string(body)
+	// log.Printf(sb)
+
+    return json.NewDecoder(resp.Body).Decode(target)
+}
+
+func DeleteJson(url string, target interface{}, postBody []byte) error {
+	requestBody := bytes.NewBuffer(postBody)
+	req, err := http.NewRequest("DELETE", url, requestBody)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+    resp, err := myClient.Do(req)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+	defer resp.Body.Close()
+
+	// ==== Activate it only for debug only; import "io/ioutil" ====
+	// body, err := ioutil.ReadAll(resp.Body)
 	// if err != nil {
 	// 	log.Fatalln(err)
 	// }
