@@ -1,12 +1,12 @@
-package invoice
+package types
 
 import (
 	"github.com/graphql-go/graphql"
 )
 
-var InvoiceType = graphql.NewObject(
+var PolicyType = graphql.NewObject(
 	graphql.ObjectConfig{
-		Name: "Invoice",
+		Name: "Policy",
 		Fields: graphql.Fields{
 			"id": &graphql.Field{Type: graphql.String},
 			"slug": &graphql.Field{Type: graphql.String},
@@ -22,51 +22,51 @@ var InvoiceType = graphql.NewObject(
 			"icon_svg": &graphql.Field{Type: graphql.String},
 			"icon_etc": &graphql.Field{Type: graphql.String},
 			"rip_link": &graphql.Field{Type: graphql.String},
-			"invoice_type": &graphql.Field{Type: graphql.String},
+			"policy_type": &graphql.Field{Type: graphql.String},
 			"coverage_period": &graphql.Field{Type: graphql.String},
 			"available_claim_methods": &graphql.Field{Type: graphql.String},
 			"covid_coverage": &graphql.Field{Type: graphql.Boolean},
 			"start_age_from": &graphql.Field{Type: graphql.Int},
 			"start_premium_from": &graphql.Field{Type: graphql.Float},
-			"category": &graphql.Field{Type: InvoiceCategoryType},
-			"insurance_type": &graphql.Field{Type: InvoiceInsuranceTypeType},
-			"riders": &graphql.Field{Type: graphql.NewList(InvoiceRiderType)},
-			"benefit_groups": &graphql.Field{Type: graphql.NewList(InvoiceBenefitGroupType)},
+			"category": &graphql.Field{Type: PolicyCategoryType},
+			"insurance_type": &graphql.Field{Type: PolicyInsuranceTypeType},
+			"riders": &graphql.Field{Type: graphql.NewList(PolicyRiderType)},
+			"benefit_groups": &graphql.Field{Type: graphql.NewList(PolicyBenefitGroupType)},
 		},
 	},
 )
 
-// InvoiceBenefitGroupType is the GraphQL schema for the Invoice type.
-var InvoiceBenefitGroupType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "InvoiceBenefitGroup",
+// PolicyBenefitGroupType is the GraphQL schema for the Policy type.
+var PolicyBenefitGroupType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "PolicyBenefitGroup",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{Type: graphql.String},
 		"tooltip_text": &graphql.Field{Type: graphql.String},
 		"name": &graphql.Field{Type: graphql.String},
 		"order": &graphql.Field{Type: graphql.Int},
-		"benefits": &graphql.Field{Type: graphql.NewList(InvoiceBenefitType)},
+		"benefits": &graphql.Field{Type: graphql.NewList(PolicyBenefitType)},
 	},
 })
 
-// InvoiceBenefitType is the GraphQL schema for the Invoice type.
-var InvoiceBenefitType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "InvoiceBenefit",
+// PolicyBenefitType is the GraphQL schema for the Policy type.
+var PolicyBenefitType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "PolicyBenefit",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{Type: graphql.String},
 		"name": &graphql.Field{Type: graphql.String},
 		"icon_svg": &graphql.Field{Type: graphql.String},
 		"icon_etc": &graphql.Field{Type: graphql.String},
-		"invoice_id": &graphql.Field{Type: graphql.String},
-		"invoice_benefit_group_id": &graphql.Field{Type: graphql.String},
+		"policy_id": &graphql.Field{Type: graphql.String},
+		"policy_benefit_group_id": &graphql.Field{Type: graphql.String},
 		"tooltip_text": &graphql.Field{Type: graphql.String},
 		"tooltip_text_description": &graphql.Field{Type: graphql.String},
 		"order": &graphql.Field{Type: graphql.Int},
 	},
 })
 
-// InvoiceRiderType is the GraphQL schema for the Invoice type.
-var InvoiceRiderType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "InvoiceRider",
+// PolicyRiderType is the GraphQL schema for the Policy type.
+var PolicyRiderType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "PolicyRider",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{Type: graphql.String},
 		"slug": &graphql.Field{Type: graphql.String},
@@ -80,18 +80,18 @@ var InvoiceRiderType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-// InvoiceCategoryType is the GraphQL schema for the Invoice type.
-var InvoiceCategoryType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "InvoiceCategory",
+// PolicyCategoryType is the GraphQL schema for the Policy type.
+var PolicyCategoryType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "PolicyCategory",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{Type: graphql.String},
 		"name": &graphql.Field{Type: graphql.String},
 	},
 })
 
-// InvoiceInsuranceTypeType is the GraphQL schema for the Invoice type.
-var InvoiceInsuranceTypeType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "InvoiceInsuranceType",
+// PolicyInsuranceTypeType is the GraphQL schema for the Policy type.
+var PolicyInsuranceTypeType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "PolicyInsuranceType",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{Type: graphql.String},
 		"name": &graphql.Field{Type: graphql.String},

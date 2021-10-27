@@ -3,12 +3,14 @@ package routes
 import (
 	"github.com/graphql-go/graphql"
 	"graphql-poc-go/product"
-	"graphql-poc-go/product/usecases"
-	"graphql-poc-go/invoice"
+	productUsecases "graphql-poc-go/product/usecases"
+	"graphql-poc-go/policy"
+	policyUsecases "graphql-poc-go/policy/usecases"
 )
 
 var (
-	productService    usecases.ProductService = usecases.NewProductService()
+	productService    productUsecases.ProductService = productUsecases.NewProductService()
+	policyService    policyUsecases.PolicyService = policyUsecases.NewPolicyService()
 )
 
 // GetRootQueryFields returns all the available queries.
@@ -18,8 +20,8 @@ func GetRootQueryFields() graphql.Fields {
 		"product": product.NewProductQuery(productService).GetProductQuery(),
 		"products": product.NewProductQuery(productService).GetProductsQuery(),
 
-		"invoice": invoice.GetInvoiceQuery(),
-		"invoices": invoice.GetInvoicesQuery(),
+		"policy": policy.NewPolicyQuery(policyService).GetPolicyQuery(),
+		"policies": policy.NewPolicyQuery(policyService).GetPoliciesQuery(),
 	}
 }
 
@@ -30,8 +32,8 @@ func GetRootMutationFields() graphql.Fields {
 		"updateProduct": product.NewProductMutation(productService).UpdateProductMutation(),
 		"deleteProduct": product.NewProductMutation(productService).DeleteProductMutation(),
 
-		// "createInvoice": invoice.CreateInvoiceMutation(),
-		// "updateInvoice": invoice.UpdateInvoiceMutation(),
-		// "deleteInvoice": invoice.DeleteInvoiceMutation(),
+		"createPolicy": policy.NewPolicyMutation(policyService).CreatePolicyMutation(),
+		"updatePolicy": policy.NewPolicyMutation(policyService).UpdatePolicyMutation(),
+		"deletePolicy": policy.NewPolicyMutation(policyService).DeletePolicyMutation(),
 	}
 }

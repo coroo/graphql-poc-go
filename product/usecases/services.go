@@ -8,6 +8,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"graphql-poc-go/product/entities"
 	"graphql-poc-go/app/utils"
+	dtoEntities "graphql-poc-go/app/dto/entities"
 )
 
 type ProductService interface {
@@ -15,7 +16,7 @@ type ProductService interface {
 	GetProduct(params graphql.ResolveParams) *entities.Product
 	SaveProduct(params graphql.ResolveParams) *entities.Product
 	UpdateProduct(params graphql.ResolveParams) *entities.Product
-	DeleteProduct(params graphql.ResolveParams) *entities.Delete
+	DeleteProduct(params graphql.ResolveParams) *dtoEntities.Delete
 }
 
 type productService struct {}
@@ -53,7 +54,7 @@ func (usecases *productService) SaveProduct(params graphql.ResolveParams) *entit
 	//Leverage Go's HTTP Post function to make request
 
 	product := new(entities.Product)
-	utils.PostJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody)
+	utils.PostJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
 	if string(product.Id) == "" {
 		log.Println("Error Occured")
 	}
@@ -71,29 +72,29 @@ func (usecases *productService) UpdateProduct(params graphql.ResolveParams) *ent
 	//Leverage Go's HTTP Post function to make request
 
 	product := new(entities.Product)
-	utils.UpdateJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody)
+	utils.UpdateJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
 	if string(product.Id) == "" {
 		log.Println("Error Occured")
 	}
 	return product
 }
 
-func (usecases *productService) DeleteProduct(params graphql.ResolveParams) *entities.Delete {
+func (usecases *productService) DeleteProduct(params graphql.ResolveParams) *dtoEntities.Delete {
 	postBody, _ := json.Marshal(map[string]string{
 		"id":    			params.Args["id"].(string),
 	})
 	response := new(interface{})
-	utils.DeleteJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", response, postBody)
+	utils.DeleteJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", response, postBody, "")
 	mapData, _ := utils.InterfaceToMap(response)
 
 	if(mapData["message"] == nil){
-		res := &entities.Delete{
+		res := &dtoEntities.Delete{
 			Message		: "Error",
 			Description	: fmt.Sprintf("%v", mapData["detail"]),
 		}
 		return res
 	}
-	res := &entities.Delete{
+	res := &dtoEntities.Delete{
 		Message		: fmt.Sprintf("%v", mapData["message"]),
 	}
 	return res

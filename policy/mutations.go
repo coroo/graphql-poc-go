@@ -1,33 +1,33 @@
-package product
+package policy
 
 import (
 	"github.com/graphql-go/graphql"
 	"graphql-poc-go/app/utils"
-	"graphql-poc-go/product/types"
-	"graphql-poc-go/product/entities"
-	"graphql-poc-go/product/usecases"
+	"graphql-poc-go/policy/types"
+	"graphql-poc-go/policy/entities"
+	"graphql-poc-go/policy/usecases"
 	dtoTypes "graphql-poc-go/app/dto/types"
 )
-type ProductMutation interface {
-	CreateProductMutation() *graphql.Field
-	UpdateProductMutation() *graphql.Field
-	DeleteProductMutation() *graphql.Field
+type PolicyMutation interface {
+	CreatePolicyMutation() *graphql.Field
+	UpdatePolicyMutation() *graphql.Field
+	DeletePolicyMutation() *graphql.Field
 }
 
-type productMutation struct {
-	usecases		usecases.ProductService
+type policyMutation struct {
+	usecases		usecases.PolicyService
 }
 
-func NewProductMutation(usecase usecases.ProductService) ProductMutation {
-	return &productMutation{
+func NewPolicyMutation(usecase usecases.PolicyService) PolicyMutation {
+	return &policyMutation{
 		usecases: usecase,
 	}
 }
 
-func (mutations *productMutation) CreateProductMutation() *graphql.Field {
+func (mutations *policyMutation) CreatePolicyMutation() *graphql.Field {
 	return &graphql.Field{
-		Type:        types.ProductType,
-		Description: "Create new product",
+		Type:        types.PolicyType,
+		Description: "Create new policy",
 		Args: graphql.FieldConfigArgument{
 			"name": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
@@ -40,16 +40,16 @@ func (mutations *productMutation) CreateProductMutation() *graphql.Field {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			product := usecases.ProductService.SaveProduct(mutations.usecases, params)
-			return product, nil
+			policy := usecases.PolicyService.SavePolicy(mutations.usecases, params)
+			return policy, nil
 		},
 	}
 }
 
-func (mutations *productMutation) UpdateProductMutation() *graphql.Field {
+func (mutations *policyMutation) UpdatePolicyMutation() *graphql.Field {
 	return &graphql.Field{
-		Type:        types.ProductType,
-		Description: "Update product by slug",
+		Type:        types.PolicyType,
+		Description: "Update policy by slug",
 		Args: graphql.FieldConfigArgument{
 			"slug": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
@@ -70,43 +70,43 @@ func (mutations *productMutation) UpdateProductMutation() *graphql.Field {
 			description, descriptionOk := params.Args["description"].(string)
 			summary, summaryOk := params.Args["summary"].(string)
 			price, priceOk := params.Args["price"].(float64)
-			product := entities.Product{}
-			products := []entities.Product{}
-			utils.GetJson("http://0.0.0.0:8016/api/v1/products/", products)
-			for i, p := range products {
+			policy := entities.Policy{}
+			policies := []entities.Policy{}
+			utils.GetJson("http://0.0.0.0:8016/api/v1/policies/", policies)
+			for i, p := range policies {
 				if string(slug) == p.Slug {
 					if nameOk {
-						products[i].Name = name
+						policies[i].Name = name
 					}
 					if descriptionOk {
-						products[i].Description = description
+						policies[i].Description = description
 					}
 					if summaryOk {
-						products[i].Summary = summary
+						policies[i].Summary = summary
 					}
 					if priceOk {
-						products[i].StartPremiumFrom = price
+						policies[i].StartPremiumFrom = price
 					}
-					product = products[i]
+					policy = policies[i]
 					break
 				}
 			}
-			return product, nil
+			return policy, nil
 		},
 	}
 }
 
-func (mutations *productMutation) DeleteProductMutation() *graphql.Field {
+func (mutations *policyMutation) DeletePolicyMutation() *graphql.Field {
 	return &graphql.Field{
 		Type:        dtoTypes.DeleteType,
-		Description: "Delete product by id",
+		Description: "Delete policy by id",
 		Args: graphql.FieldConfigArgument{
 			"id": &graphql.ArgumentConfig{
 				Type: graphql.NewNonNull(graphql.String),
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			response := usecases.ProductService.DeleteProduct(mutations.usecases, params)
+			response := usecases.PolicyService.DeletePolicy(mutations.usecases, params)
 			return response, nil
 		},
 	}

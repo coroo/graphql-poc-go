@@ -34,28 +34,10 @@ func GetJson(url string, target interface{}) error {
     return json.NewDecoder(response).Decode(target)
 }
 
-func PostJson(url string, target interface{}, postBody []byte) error {
-	requestBody := bytes.NewBuffer(postBody)
-	resp, err := http.Post(url, "application/json", requestBody)
-	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
-	}
-	defer resp.Body.Close()
-
-	// ==== Activate it only for debug only; import "io/ioutil" ====
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-	// sb := string(body)
-	// log.Printf(sb)
-
-    return json.NewDecoder(resp.Body).Decode(target)
-}
-
-func UpdateJson(url string, target interface{}, postBody []byte) error {
+func PostJson(url string, target interface{}, postBody []byte, token string) error {
 	requestBody := bytes.NewBuffer(postBody)
 	req, err := http.NewRequest("UPDATE", url, requestBody)
+	req.Header.Add("Authorization","bearer " + token) 
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
@@ -76,9 +58,34 @@ func UpdateJson(url string, target interface{}, postBody []byte) error {
     return json.NewDecoder(resp.Body).Decode(target)
 }
 
-func DeleteJson(url string, target interface{}, postBody []byte) error {
+func UpdateJson(url string, target interface{}, postBody []byte, token string) error {
+	requestBody := bytes.NewBuffer(postBody)
+	req, err := http.NewRequest("UPDATE", url, requestBody)
+	req.Header.Add("Authorization","bearer " + token) 
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+    resp, err := myClient.Do(req)
+	if err != nil {
+		log.Fatalf("An Error Occured %v", err)
+	}
+	defer resp.Body.Close()
+
+	// ==== Activate it only for debug only; import "io/ioutil" ====
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+	// sb := string(body)
+	// log.Printf(sb)
+
+    return json.NewDecoder(resp.Body).Decode(target)
+}
+
+func DeleteJson(url string, target interface{}, postBody []byte, token string) error {
 	requestBody := bytes.NewBuffer(postBody)
 	req, err := http.NewRequest("DELETE", url, requestBody)
+	req.Header.Add("Authorization","bearer "+token) 
 	if err != nil {
 		log.Fatalf("An Error Occured %v", err)
 	}
