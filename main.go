@@ -8,6 +8,7 @@ import (
 	"github.com/graphql-go/handler"
 	"github.com/graphql-go/graphql"
 	"graphql-poc-go/app/routes"
+	"graphql-poc-go/app/utils"
 )
 
 var schema, _ = graphql.NewSchema(
@@ -32,19 +33,15 @@ func main() {
 		Playground: true,
 		RootObjectFn: func(ctx context.Context, r *http.Request) map[string]interface{} {
 			ctx = context.WithValue(r.Context(), "header", r.Header)
-			// print(ctx)
 			rootObject := make(map[string]interface{}, len(r.Header))
 			for k, v := range r.Header {
 				rootObject[k] = v
 			}
 			return rootObject
-			// return map[string]interface{}{
-			// 	"s": "world",
-			// }
 		},
 	})
 
 	http.Handle("/graphql", h)
-	log.Println("Server ready at http://localhost/8080/graphql")
-	http.ListenAndServe(":8080", nil)
+	log.Println("Server ready at "+utils.EnvVariable("MAIN_SCHEMES")+"://"+utils.EnvVariable("MAIN_URL")+"/"+utils.EnvVariable("MAIN_PORT")+"/graphql")
+	http.ListenAndServe(":"+utils.EnvVariable("MAIN_PORT")+"", nil)
 }

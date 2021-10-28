@@ -32,6 +32,34 @@ type ProductBenefit struct {
     Order				int	`json:"order"`
 }
 
+type ProductTnc struct {
+    Id					string	`json:"id"`
+    IconSvg				string	`json:"icon_svg"`
+    IconEtc				string	`json:"icon_etc"`
+    ProductId			string	`json:"product_id"`
+    Description	        string	`json:"description"`
+    TooltipText			string	`json:"tooltip_text"`
+    Order				int	`json:"order"`
+}
+
+type ProductFaq struct {
+    Id					string	`json:"id"`
+    Title				string	`json:"title"`
+    Body				string	`json:"body"`
+    ProductId			string	`json:"product_id"`
+    TooltipText			string	`json:"tooltip_text"`
+}
+
+type ProductNotCoverage struct {
+    Id					string	`json:"id"`
+    IconSvg				string	`json:"icon_svg"`
+    IconEtc				string	`json:"icon_etc"`
+    ProductId			string	`json:"product_id"`
+    Description	        string	`json:"description"`
+    TooltipText			string	`json:"tooltip_text"`
+    Order				int	`json:"order"`
+}
+
 type ProductCategory struct {
     Id					string	`json:"id"`
     Name				string	`json:"name"`
@@ -67,9 +95,9 @@ type Product struct {
     InsuranceType			ProductInsuranceType	`json:"insurance_type"`
     Riders					[]ProductRider	`json:"riders"`
     BenefitGroups			[]ProductBenefitGroup	`json:"benefit_groups"`
-    // Tnc						List	`json:"tnc"`
-    // Faq						List	`json:"faq"`
-    // NotCoverage				List	`json:"not_coverage"`
+    Tnc			            []ProductTnc	`json:"tnc"`
+    Faq						[]ProductFaq	`json:"faq"`
+    NotCoverage				[]ProductNotCoverage	`json:"not_coverage"`
     // Plans					List	`json:"plans"`
 	// BELUM SELESAI
 }

@@ -32,6 +32,9 @@ var ProductType = graphql.NewObject(
 			"insurance_type": &graphql.Field{Type: ProductInsuranceTypeType},
 			"riders": &graphql.Field{Type: graphql.NewList(ProductRiderType)},
 			"benefit_groups": &graphql.Field{Type: graphql.NewList(ProductBenefitGroupType)},
+			"tnc": &graphql.Field{Type: graphql.NewList(ProductTncType)},
+			"faq": &graphql.Field{Type: graphql.NewList(ProductFaqType)},
+			"not_coverage": &graphql.Field{Type: graphql.NewList(ProductNotCoverageType)},
 		},
 	},
 )
@@ -60,6 +63,46 @@ var ProductBenefitType = graphql.NewObject(graphql.ObjectConfig{
 		"product_benefit_group_id": &graphql.Field{Type: graphql.String},
 		"tooltip_text": &graphql.Field{Type: graphql.String},
 		"tooltip_text_description": &graphql.Field{Type: graphql.String},
+		"order": &graphql.Field{Type: graphql.Int},
+	},
+})
+
+// ProductTncType is the GraphQL schema for the Product type.
+var ProductTncType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductTnc",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"icon_svg": &graphql.Field{Type: graphql.String},
+		"icon_etc": &graphql.Field{Type: graphql.String},
+		"description": &graphql.Field{Type: graphql.String},
+		"product_id": &graphql.Field{Type: graphql.String},
+		"tooltip_text": &graphql.Field{Type: graphql.String},
+		"order": &graphql.Field{Type: graphql.Int},
+	},
+})
+
+// ProductFaqType is the GraphQL schema for the Product type.
+var ProductFaqType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductFaq",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"title": &graphql.Field{Type: graphql.String},
+		"body": &graphql.Field{Type: graphql.String},
+		"product_id": &graphql.Field{Type: graphql.String},
+		"tooltip_text": &graphql.Field{Type: graphql.String},
+	},
+})
+
+// ProductNotCoverageType is the GraphQL schema for the Product type.
+var ProductNotCoverageType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "ProductNotCoverage",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{Type: graphql.String},
+		"icon_svg": &graphql.Field{Type: graphql.String},
+		"icon_etc": &graphql.Field{Type: graphql.String},
+		"description": &graphql.Field{Type: graphql.String},
+		"product_id": &graphql.Field{Type: graphql.String},
+		"tooltip_text": &graphql.Field{Type: graphql.String},
 		"order": &graphql.Field{Type: graphql.Int},
 	},
 })
