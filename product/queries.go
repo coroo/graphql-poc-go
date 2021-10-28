@@ -30,8 +30,8 @@ func (queries *productQuery) GetProductsQuery() *graphql.Field {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			products := usecases.ProductService.GetAllProducts(queries.usecases)
-			return products, nil
+			products, err := usecases.ProductService.GetAllProducts(queries.usecases)
+			return products, err
 		},
 	}
 }
@@ -46,8 +46,8 @@ func (queries *productQuery) GetProductQuery() *graphql.Field {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			product := usecases.ProductService.GetProduct(queries.usecases, params)
-			return product, nil
+			product, err := usecases.ProductService.GetProduct(queries.usecases, params)
+			return product, err
 		},
 	}
 }

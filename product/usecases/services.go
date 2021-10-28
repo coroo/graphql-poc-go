@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"fmt"
-	"log"
+	"errors"
 	"encoding/json"
 
 	"github.com/graphql-go/graphql"
@@ -12,11 +12,11 @@ import (
 )
 
 type ProductService interface {
-	GetAllProducts() *[]entities.Product
-	GetProduct(params graphql.ResolveParams) *entities.Product
-	SaveProduct(params graphql.ResolveParams) *entities.Product
-	UpdateProduct(params graphql.ResolveParams) *entities.Product
-	DeleteProduct(params graphql.ResolveParams) *dtoEntities.Delete
+	GetAllProducts() (*[]entities.Product, error)
+	GetProduct(params graphql.ResolveParams) (*entities.Product, error)
+	SaveProduct(params graphql.ResolveParams) (*entities.Product, error)
+	UpdateProduct(params graphql.ResolveParams) (*entities.Product, error)
+	DeleteProduct(params graphql.ResolveParams) (*dtoEntities.Delete, error)
 }
 
 type productService struct {}
@@ -25,25 +25,31 @@ func NewProductService() ProductService {
 	return &productService{}
 }
 
-func (usecase *productService) GetAllProducts() *[]entities.Product {
+func (usecase *productService) GetAllProducts() (*[]entities.Product, error) {
 	products := new([]entities.Product)
-	utils.GetJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", products)
-	return products
+	err := utils.GetJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", products)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
 
-func (usecase *productService) GetProduct(params graphql.ResolveParams) *entities.Product {
+func (usecase *productService) GetProduct(params graphql.ResolveParams) (*entities.Product, error) {
 	slug, ok := params.Args["slug"].(string)
 	if ok {
 		product := new(entities.Product)
-		utils.GetJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/slug/"+slug, product)
+		err := utils.GetJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/slug/"+slug, product)
+		if err != nil {
+			return nil, err
+		}
 		if string(product.Slug) == slug {
-			return product
+			return product, nil
 		}
 	}
-	return nil
+	return nil, nil
 }
 
-func (usecases *productService) SaveProduct(params graphql.ResolveParams) *entities.Product {
+func (usecases *productService) SaveProduct(params graphql.ResolveParams) (*entities.Product, error) {
 	//Encode the data
 	postBody, _ := json.Marshal(map[string]string{
 		"slug":    			params.Args["slug"].(string),
@@ -54,14 +60,14 @@ func (usecases *productService) SaveProduct(params graphql.ResolveParams) *entit
 	//Leverage Go's HTTP Post function to make request
 
 	product := new(entities.Product)
-	utils.PostJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
-	if string(product.Id) == "" {
-		log.Println("Error Occured")
+	err := utils.PostJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
+	if err != nil {
+		return nil, err
 	}
-	return product
+	return product, nil
 }
 
-func (usecases *productService) UpdateProduct(params graphql.ResolveParams) *entities.Product {
+func (usecases *productService) UpdateProduct(params graphql.ResolveParams) (*entities.Product, error) {
 	//Encode the data
 	postBody, _ := json.Marshal(map[string]string{
 		"slug":    			params.Args["slug"].(string),
@@ -72,19 +78,25 @@ func (usecases *productService) UpdateProduct(params graphql.ResolveParams) *ent
 	//Leverage Go's HTTP Post function to make request
 
 	product := new(entities.Product)
-	utils.UpdateJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
-	if string(product.Id) == "" {
-		log.Println("Error Occured")
+	err := utils.UpdateJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", product, postBody, "")
+	if err != nil {
+		return nil, err
 	}
-	return product
+	if string(product.Id) == "" {
+		return nil, errors.New("Error Occured")
+	}
+	return product, nil
 }
 
-func (usecases *productService) DeleteProduct(params graphql.ResolveParams) *dtoEntities.Delete {
+func (usecases *productService) DeleteProduct(params graphql.ResolveParams) (*dtoEntities.Delete, error) {
 	postBody, _ := json.Marshal(map[string]string{
 		"id":    			params.Args["id"].(string),
 	})
 	response := new(interface{})
-	utils.DeleteJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", response, postBody, "")
+	err := utils.DeleteJson(utils.EnvVariable("MICRO_PRODUCT_LINK")+"products/", response, postBody, "")
+	if err != nil {
+		return nil, err
+	}
 	mapData, _ := utils.InterfaceToMap(response)
 
 	if(mapData["message"] == nil){
@@ -92,10 +104,10 @@ func (usecases *productService) DeleteProduct(params graphql.ResolveParams) *dto
 			Message		: "Error",
 			Description	: fmt.Sprintf("%v", mapData["detail"]),
 		}
-		return res
+		return res, nil
 	}
 	res := &dtoEntities.Delete{
 		Message		: fmt.Sprintf("%v", mapData["message"]),
 	}
-	return res
+	return res, nil
 }

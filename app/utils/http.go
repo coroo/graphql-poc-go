@@ -5,7 +5,9 @@ import (
 	"time"
 	"bytes"
 	"log"
-	// "io/ioutil"
+	"io/ioutil"
+	"errors"
+	"strconv"
 	
 	"encoding/json"
 )
@@ -26,36 +28,57 @@ func GetJson(url string, target interface{}) error {
 		return err
     }
     defer res.Body.Close()
-	response := res.Body
-	// == FOR CHECK THE ERROR: import "io/ioutil", "fmt"
-    // bodyBytes, _ := ioutil.ReadAll(res.Body)
-	// fmt.Println(string(bodyBytes))
 
-    return json.NewDecoder(response).Decode(target)
+	if res.StatusCode >= 200 && res.StatusCode <= 299 {
+		response := res.Body
+		// == FOR CHECK THE ERROR: import "io/ioutil", "fmt"
+		// bodyBytes, _ := ioutil.ReadAll(res.Body)
+		// fmt.Println(string(bodyBytes))
+	
+		return json.NewDecoder(response).Decode(target)
+	} else {
+		data := res.Body
+		body, err := ioutil.ReadAll(data)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		sb := string(body)
+		return errors.New(strconv.Itoa(res.StatusCode) + ": " + sb + " for " + url)
+	}
 }
 
 func PostJson(url string, target interface{}, postBody []byte, token string) error {
 	requestBody := bytes.NewBuffer(postBody)
-	req, err := http.NewRequest("UPDATE", url, requestBody)
+	req, err := http.NewRequest("POST", url, requestBody)
 	req.Header.Add("Authorization","bearer " + token) 
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
     resp, err := myClient.Do(req)
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
 	defer resp.Body.Close()
 
-	// ==== Activate it only for debug only; import "io/ioutil" ====
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-	// sb := string(body)
-	// log.Printf(sb)
-
-    return json.NewDecoder(resp.Body).Decode(target)
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		// ==== Activate it only for debug only; import "io/ioutil" ====
+		// body, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+		// sb := string(body)
+		// log.Printf(sb)
+	
+		return json.NewDecoder(resp.Body).Decode(target)
+	} else {
+		data := resp.Body
+		body, err := ioutil.ReadAll(data)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		sb := string(body)
+		return errors.New(strconv.Itoa(resp.StatusCode) + ": " + sb + " for " + url)
+	}
 }
 
 func UpdateJson(url string, target interface{}, postBody []byte, token string) error {
@@ -63,23 +86,33 @@ func UpdateJson(url string, target interface{}, postBody []byte, token string) e
 	req, err := http.NewRequest("UPDATE", url, requestBody)
 	req.Header.Add("Authorization","bearer " + token) 
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
     resp, err := myClient.Do(req)
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
 	defer resp.Body.Close()
 
-	// ==== Activate it only for debug only; import "io/ioutil" ====
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-	// sb := string(body)
-	// log.Printf(sb)
-
-    return json.NewDecoder(resp.Body).Decode(target)
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		// ==== Activate it only for debug only; import "io/ioutil" ====
+		// body, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+		// sb := string(body)
+		// log.Printf(sb)
+	
+		return json.NewDecoder(resp.Body).Decode(target)
+	} else {
+		data := resp.Body
+		body, err := ioutil.ReadAll(data)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		sb := string(body)
+		return errors.New(strconv.Itoa(resp.StatusCode) + ": " + sb + " for " + url)
+	}
 }
 
 func DeleteJson(url string, target interface{}, postBody []byte, token string) error {
@@ -87,21 +120,31 @@ func DeleteJson(url string, target interface{}, postBody []byte, token string) e
 	req, err := http.NewRequest("DELETE", url, requestBody)
 	req.Header.Add("Authorization","bearer "+token) 
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
     resp, err := myClient.Do(req)
 	if err != nil {
-		log.Fatalf("An Error Occured %v", err)
+		return err
 	}
 	defer resp.Body.Close()
 
-	// ==== Activate it only for debug only; import "io/ioutil" ====
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-	// sb := string(body)
-	// log.Printf(sb)
-
-    return json.NewDecoder(resp.Body).Decode(target)
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		// ==== Activate it only for debug only; import "io/ioutil" ====
+		// body, err := ioutil.ReadAll(resp.Body)
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+		// sb := string(body)
+		// log.Printf(sb)
+	
+		return json.NewDecoder(resp.Body).Decode(target)
+	} else {
+		data := resp.Body
+		body, err := ioutil.ReadAll(data)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		sb := string(body)
+		return errors.New(strconv.Itoa(resp.StatusCode) + ": " + sb + " for " + url)
+	}
 }

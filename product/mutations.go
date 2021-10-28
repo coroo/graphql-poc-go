@@ -2,7 +2,6 @@ package product
 
 import (
 	"github.com/graphql-go/graphql"
-	"graphql-poc-go/app/utils"
 	"graphql-poc-go/product/types"
 	"graphql-poc-go/product/entities"
 	"graphql-poc-go/product/usecases"
@@ -40,8 +39,8 @@ func (mutations *productMutation) CreateProductMutation() *graphql.Field {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			product := usecases.ProductService.SaveProduct(mutations.usecases, params)
-			return product, nil
+			product, err := usecases.ProductService.SaveProduct(mutations.usecases, params)
+			return product, err
 		},
 	}
 }
@@ -72,7 +71,7 @@ func (mutations *productMutation) UpdateProductMutation() *graphql.Field {
 			price, priceOk := params.Args["price"].(float64)
 			product := entities.Product{}
 			products := []entities.Product{}
-			utils.GetJson("http://0.0.0.0:8016/api/v1/products/", products)
+			// utils.GetJson("http://0.0.0.0:8016/api/v1/products/", products)
 			for i, p := range products {
 				if string(slug) == p.Slug {
 					if nameOk {
@@ -106,8 +105,8 @@ func (mutations *productMutation) DeleteProductMutation() *graphql.Field {
 			},
 		},
 		Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			response := usecases.ProductService.DeleteProduct(mutations.usecases, params)
-			return response, nil
+			response, err := usecases.ProductService.DeleteProduct(mutations.usecases, params)
+			return response, err
 		},
 	}
 }
